@@ -163,7 +163,6 @@ class PhonesCatalogue {
 
     this._render();
 
-
     this._el.addEventListener('click', this._onPhoneClick.bind(this))
   }
 
@@ -173,10 +172,10 @@ class PhonesCatalogue {
     phones.forEach((phone) => {
       html += `
         <li class="thumbnail" data-element="phoneItem" data-phone-id="${phone.id}">
-          <a href="#!/phones/${phone.id}" class="thumb">
+          <a href="#!/phones/${phone.id}" class="thumb" data-element="phoneItemLink">
             <img alt="${phone.name}" src="${phone.imageUrl}">
           </a>
-          <a href="#!/phones/${phone.id}">${phone.name}</a>
+          <a href="#!/phones/${phone.id}" data-element="phoneItemLink">${phone.name}</a>
           <p>${phone.snippet}</p>
         </li>
       `;
@@ -190,11 +189,13 @@ class PhonesCatalogue {
   }
 
   _onPhoneClick(event) {
-    let selectedPhoneItem = event.target.closest('[data-element="phoneItem"]');
+    let phoneItemLink = event.target.closest('[data-element="phoneItemLink"]');
 
-    if (!selectedPhoneItem) {
+    if (!phoneItemLink) {
       return;
     }
+
+    let selectedPhoneItem = phoneItemLink.closest('[data-element="phoneItem"]');
 
     alert(selectedPhoneItem.dataset.phoneId);
   }
