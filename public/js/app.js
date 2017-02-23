@@ -1,2 +1,3 @@
-let page = new PhonesPage({ el: document.body });
+'use strict';
 
+let page = new PhonePage({ el: document.body });

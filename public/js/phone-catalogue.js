@@ -156,8 +156,7 @@ const phones = [
   }
 ];
 
-
-class PhonesCatalogue {
+class PhoneCatalogue {
   constructor(options) {
     this._el = options.el;
 
@@ -175,7 +174,9 @@ class PhonesCatalogue {
           <a href="#!/phones/${phone.id}" class="thumb" data-element="phoneItemLink">
             <img alt="${phone.name}" src="${phone.imageUrl}">
           </a>
+          
           <a href="#!/phones/${phone.id}" data-element="phoneItemLink">${phone.name}</a>
+          
           <p>${phone.snippet}</p>
         </li>
       `;
