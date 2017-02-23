@@ -12,20 +12,8 @@ class PhonePage {
       el: this._el.querySelector('[data-component="phoneCatalogue"]')
     });
 
-    setTimeout(() => {
-      this._shoppingCart.addItem(1);
-    }, 1000);
-
-    setTimeout(() => {
-      this._shoppingCart.addItem(1);
-    }, 2000);
-
-    setTimeout(() => {
-      this._shoppingCart.addItem(1);
-    }, 3000);
-
-    setTimeout(() => {
-      this._shoppingCart.addItem(1);
-    }, 4000);
+    this._catalogue.on('phoneSelected', event => {
+      this._shoppingCart.addItem(event.detail)
+    });
   }
 }
