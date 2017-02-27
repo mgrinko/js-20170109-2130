@@ -43,6 +43,14 @@ class PhonePage {
     xhr.onload = () => {
       let phones = JSON.parse(xhr.responseText);
 
+      // hack until server can give filtered results
+      query = query.toLowerCase();
+
+      phones = phones.filter(phone => {
+        return phone.name.toLowerCase().indexOf(query) !== -1;
+      });
+      // enf hack
+
       this._catalogue.setData(phones);
     };
 
