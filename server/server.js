@@ -9,7 +9,7 @@ function accept(req, res) {
 
     setTimeout(function() {
       file.serve(req, res);
-    }, 5000);
+    }, 1000);
 
   } else {
 
