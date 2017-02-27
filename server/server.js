@@ -6,12 +6,16 @@ var file = new static.Server('.', {
 
 function accept(req, res) {
   if (req.url.indexOf('/data/') === 0) {
+
     setTimeout(function() {
       file.serve(req, res);
-    }, 100);
+    }, 5000);
+
   } else {
-    req.url = '/public' + req.url
+
+    req.url = '/public' + req.url;
     file.serve(req, res);
+
   }
 }
 
