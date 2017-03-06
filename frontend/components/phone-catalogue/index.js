@@ -1,5 +1,5 @@
 import Component from '../component';
-import template from 'raw-loader!./template.html';
+import template from './template.html';
 
 let compiledTemplate = _.template(template);
 

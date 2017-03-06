@@ -9,38 +9,37 @@ module.exports = {
 
   devtool: "source-map",
   watch: true,
+
+  module: {
+
+    rules: [
+      // {
+      //   test: /\.css$/,
+      //   loader: "style-loader!css-loader"
+      // },
+      {
+        test: /\.html$/,
+        loader: 'raw-loader'
+      },
+      // {
+      //   test: /\.hbs$/,
+      //   loader: 'handlebars-loader'
+      // },
+      {
+        test: /\.js$/,
+        exclude: /node_modules/,
+        loader: 'babel-loader',
+        query: {
+          presets: ['env'],
+          // plugins: ['transform-runtime']
+        }
+      }
+    ],
+  },
 };
 
 
-  // devtool: "source-map",
-  // watch: true,
-  //
-  // module: {
-  //
-  //   rules: [
-  //     {
-  //       test: /\.css$/,
-  //       loader: "style-loader!css-loader"
-  //     },
-  //     {
-  //       test: /\.html$/,
-  //       loader: 'raw-loader'
-  //     },
-  //     {
-  //       test: /\.hbs$/,
-  //       loader: 'handlebars-loader'
-  //     },
-  //     {
-  //       test: /\.js$/,
-  //       exclude: /node_modules/,
-  //       loader: 'babel-loader',
-  //       query: {
-  //         presets: ['env'],
-  //         // plugins: ['transform-runtime']
-  //       }
-  //     }
-  //   ],
-  // },
+
   //
   // devServer: {
   //   proxy: {
