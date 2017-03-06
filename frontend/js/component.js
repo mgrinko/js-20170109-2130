@@ -1,4 +1,4 @@
-class Component {
+export default class Component {
   constructor(element) {
     this._el = element;
   }

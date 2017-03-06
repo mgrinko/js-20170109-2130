@@ -1,6 +1,6 @@
-'use strict';
+import Component from './component';
 
-class ShoppingCart {
+export default class ShoppingCart {
   constructor(options) {
     this._el = options.el;
 

@@ -17,6 +17,10 @@
   },
   "homepage": "https://github.com/mgrinko/js-20170109-2130#readme",
   "devDependencies": {
-    "node-static": "^0.7.9"
+    "node-static": "^0.7.9",
+    "webpack": "^2.2.1"
+  },
+  "dependencies": {
+    "lodash.template": "^4.4.0"
   }
 }

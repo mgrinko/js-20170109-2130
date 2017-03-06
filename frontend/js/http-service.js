@@ -1,4 +1,4 @@
-class HttpService {
+export default class HttpService {
   static request(url, options = {}) {
     let method = options.method || 'GET';
     let xhr = new XMLHttpRequest();
