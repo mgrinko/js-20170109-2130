@@ -1,4 +1,5 @@
 import Component from '../component';
+import compiledTemplate from './template.hbs';
 
 export default class ShoppingCart extends Component {
   constructor(options) {
@@ -10,10 +11,7 @@ export default class ShoppingCart extends Component {
   }
 
   _render() {
-    let template = document.querySelector('#shopping-cart-template').innerHTML;
-    let compiled = _.template(template);
-
-    this._el.innerHTML = compiled({
+    this._el.innerHTML = compiledTemplate({
       orderItems: this._items
     });
   }
