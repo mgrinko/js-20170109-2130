@@ -1,8 +1,8 @@
-import Component from './component';
+import Component from '../component';
 
-export default class ShoppingCart {
+export default class ShoppingCart extends Component {
   constructor(options) {
-    this._el = options.el;
+    super(options.el);
 
     this._items = [];
 

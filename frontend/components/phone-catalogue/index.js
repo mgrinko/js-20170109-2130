@@ -1,4 +1,7 @@
-import Component from './component';
+import Component from '../component';
+import template from 'raw-loader!./template.html';
+
+let compiledTemplate = _.template(template);
 
 export default class PhoneCatalogue extends Component {
   constructor(options) {
@@ -16,12 +19,8 @@ export default class PhoneCatalogue extends Component {
     this._render();
   }
 
-
   _render() {
-    let template = document.querySelector('#phone-catalogue-template').innerHTML;
-    let compiled = _.template(template);
-
-    this._el.innerHTML = compiled({
+    this._el.innerHTML = compiledTemplate({
       phones: this._phones
     });
   }

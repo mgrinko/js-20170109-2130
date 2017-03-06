@@ -1,8 +1,8 @@
-import PhoneViewer from './phone-viewer';
-import PhoneCatalogue from './phone-catalogue';
-import Search from './search';
-import ShoppingCart from './shopping-cart';
-import HttpService from './http-service';
+import PhoneViewer from '../phone-viewer';
+import PhoneCatalogue from '../phone-catalogue';
+import Search from '../search';
+import ShoppingCart from '../shopping-cart';
+import HttpService from '../../services/http-service';
 
 export default class PhonePage {
   constructor(options) {

@@ -18,6 +18,7 @@
   "homepage": "https://github.com/mgrinko/js-20170109-2130#readme",
   "devDependencies": {
     "node-static": "^0.7.9",
+    "raw-loader": "^0.5.1",
     "webpack": "^2.2.1"
   },
   "dependencies": {
