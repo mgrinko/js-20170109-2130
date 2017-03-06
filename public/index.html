@@ -9,6 +9,8 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.4/lodash.min.js"></script>
   <script src="js/search.js"></script>
   <script src="js/shopping-cart.js"></script>
+  <script src="js/http-service.js"></script>
+  <script src="js/phone-viewer.js"></script>
   <script src="js/phone-catalogue.js"></script>
   <script src="js/phone-page.js"></script>
   <script src="js/app.js" defer></script>
@@ -43,39 +45,8 @@
     <div class="col-md-10">
       <!--Body content-->
 
-      <div data-component="phoneCatalogue" hidden></div>
-      <div data-component="phoneViewer">
-        <button>Back</button> <button>Add to basket</button>
-        <div>
-
-          <img class="phone" ng-src="img/phones/motorola-xoom-with-wi-fi.0.jpg" src="img/phones/motorola-xoom-with-wi-fi.0.jpg">
-
-          <h1>Motorola XOOM™ with Wi-Fi</h1>
-
-          <p>Motorola XOOM with Wi-Fi has a super-powerful dual-core processor and Android™ 3.0 (Honeycomb) — the Android platform designed specifically for tablets. With its 10.1-inch HD widescreen display, you’ll enjoy HD video in a thin, light, powerful and upgradeable tablet.</p>
-
-          <ul class="phone-thumbs">
-            <li>
-              <img src="img/phones/motorola-xoom-with-wi-fi.0.jpg">
-            </li>
-            <li>
-              <img src="img/phones/motorola-xoom-with-wi-fi.1.jpg">
-            </li>
-            <li>
-              <img src="img/phones/motorola-xoom-with-wi-fi.2.jpg">
-            </li>
-            <li>
-              <img src="img/phones/motorola-xoom-with-wi-fi.3.jpg">
-            </li>
-            <li>
-              <img src="img/phones/motorola-xoom-with-wi-fi.4.jpg">
-            </li>
-            <li>
-              <img src="img/phones/motorola-xoom-with-wi-fi.5.jpg">
-            </li>
-          </ul>
-        </div>
-      </div>
+      <div data-component="phoneCatalogue"></div>
+      <div data-component="phoneViewer" hidden></div>
 
     </div>
   </div>
@@ -113,6 +84,38 @@
     <p>No items yet!</p>
   <% } %>
 
+</script>
+
+<script type="text/template" id="phone-viewer-template">
+  <button>Back</button> <button>Add to basket</button>
+  <div>
+    <img class="phone" ng-src="img/phones/motorola-xoom-with-wi-fi.0.jpg" src="img/phones/motorola-xoom-with-wi-fi.0.jpg">
+
+    <h1>Motorola XOOM™ with Wi-Fi</h1>
+
+    <p>Motorola XOOM with Wi-Fi has a super-powerful dual-core processor and Android™ 3.0 (Honeycomb) — the Android platform designed specifically for tablets. With its 10.1-inch HD widescreen display, you’ll enjoy HD video in a thin, light, powerful and upgradeable tablet.</p>
+
+    <ul class="phone-thumbs">
+      <li>
+        <img src="img/phones/motorola-xoom-with-wi-fi.0.jpg">
+      </li>
+      <li>
+        <img src="img/phones/motorola-xoom-with-wi-fi.1.jpg">
+      </li>
+      <li>
+        <img src="img/phones/motorola-xoom-with-wi-fi.2.jpg">
+      </li>
+      <li>
+        <img src="img/phones/motorola-xoom-with-wi-fi.3.jpg">
+      </li>
+      <li>
+        <img src="img/phones/motorola-xoom-with-wi-fi.4.jpg">
+      </li>
+      <li>
+        <img src="img/phones/motorola-xoom-with-wi-fi.5.jpg">
+      </li>
+    </ul>
+  </div>
 </script>
 
 

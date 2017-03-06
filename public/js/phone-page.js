@@ -17,6 +17,10 @@ class PhonePage {
       el: this._el.querySelector('[data-component="phoneCatalogue"]')
     });
 
+    this._viewer = new PhoneViewer({
+      el: this._el.querySelector('[data-component="phoneViewer"]')
+    });
+
     this._search.on('valueChanged', (event) => {
       let query = event.detail;
 
@@ -24,36 +28,38 @@ class PhonePage {
     });
 
     this._catalogue.on('phoneSelected', event => {
-      this._shoppingCart.addItem(event.detail)
+      let phoneId = event.detail;
+      let phoneData =
+
+      this._viewer.setData()
+      //this._shoppingCart.addItem(event.detail);
     });
 
     this._loadPhones();
   }
 
   _loadPhones(query = '') {
-    let xhr = new XMLHttpRequest();
     let url = '/data/phones.json';
 
     if (query) {
       url += `?query=${query}`;
     }
 
-    xhr.open('GET', url, true);
+    HttpService.request(url, {
+      method: 'GET',
+      success: (phones) => {
+        // hack until server can give filtered results
+        query = query.toLowerCase();
 
-    xhr.onload = () => {
-      let phones = JSON.parse(xhr.responseText);
+        phones = phones.filter(phone => {
+          return phone.name.toLowerCase().indexOf(query) !== -1;
+        });
+        // enf hack
 
-      // hack until server can give filtered results
-      query = query.toLowerCase();
+        this._catalogue.setData(phones);
+      },
+      error: (error) => { console.error(error); }
+    });
 
-      phones = phones.filter(phone => {
-        return phone.name.toLowerCase().indexOf(query) !== -1;
-      });
-      // enf hack
-
-      this._catalogue.setData(phones);
-    };
-
-    xhr.send();
   }
 }
