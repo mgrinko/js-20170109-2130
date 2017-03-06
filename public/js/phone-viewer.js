@@ -1,34 +1,15 @@
 'use strict';
 
-class PhoneViewer {
+class PhoneViewer extends Component {
   constructor(options) {
-    this._el = options.el;
-    this._phone = options.phone;
-
-    this._render();
+    super(options.el);
 
     //this._el.addEventListener('click', this._onPhoneClick.bind(this))
   }
 
-  setData(phones) {
-    this._phones = phones;
+  setData(phone) {
+    this._phone = phone;
     this._render();
-  }
-
-  on(eventName, handler) {
-    this._el.addEventListener(eventName, handler);
-  }
-
-  off(eventName, handler) {
-    this._el.removeEventListener(eventName, handler);
-  }
-
-  _trigger(eventName, data) {
-    let myEvent = new CustomEvent(eventName, {
-      detail: data
-    });
-
-    this._el.dispatchEvent(myEvent);
   }
 
   _render() {
@@ -36,7 +17,7 @@ class PhoneViewer {
     let compiled = _.template(template);
 
     this._el.innerHTML = compiled({
-      phones: this._phones
+      phone: this._phone
     });
   }
 

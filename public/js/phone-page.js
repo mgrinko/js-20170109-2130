@@ -4,21 +4,27 @@ class PhonePage {
   constructor(options) {
     this._el = options.el;
 
+    this.initCatalogue();
+    this.initSearch();
+    this.initViewer();
+    this.initShoppingCart();
+  }
 
-    this._search = new Search({
-      el: this._el.querySelector('[data-component="search"]')
+  initViewer() {
+    this._viewer = new PhoneViewer({
+      el: this._el.querySelector('[data-component="phoneViewer"]')
     });
+  }
 
+  initShoppingCart() {
     this._shoppingCart = new ShoppingCart({
       el: this._el.querySelector('[data-component="shoppingCart"]')
     });
+  }
 
-    this._catalogue = new PhoneCatalogue({
-      el: this._el.querySelector('[data-component="phoneCatalogue"]')
-    });
-
-    this._viewer = new PhoneViewer({
-      el: this._el.querySelector('[data-component="phoneViewer"]')
+  initSearch() {
+    this._search = new Search({
+      el: this._el.querySelector('[data-component="search"]')
     });
 
     this._search.on('valueChanged', (event) => {
@@ -26,16 +32,36 @@ class PhonePage {
 
       this._loadPhones(query)
     });
+  }
+
+  initCatalogue() {
+    this._catalogue = new PhoneCatalogue({
+      el: this._el.querySelector('[data-component="phoneCatalogue"]')
+    });
 
     this._catalogue.on('phoneSelected', event => {
       let phoneId = event.detail;
-      let phoneData =
 
-      this._viewer.setData()
-      //this._shoppingCart.addItem(event.detail);
+      this._loadPhoneDetails(phoneId);
     });
 
     this._loadPhones();
+  }
+
+  _loadPhoneDetails(phoneId) {
+    let url = `/data/phones/${phoneId}.json`;
+
+    HttpService.request(url, {
+      method: 'GET',
+      success: this._onPhoneDetailsLoaded.bind(this),
+      error: this._onLoadError.bind(this)
+    });
+  }
+
+  _onPhoneDetailsLoaded(phoneData) {
+    this._viewer.setData(phoneData);
+    this._viewer.show();
+    this._catalogue.hide();
   }
 
   _loadPhones(query = '') {
@@ -47,19 +73,24 @@ class PhonePage {
 
     HttpService.request(url, {
       method: 'GET',
-      success: (phones) => {
-        // hack until server can give filtered results
-        query = query.toLowerCase();
-
-        phones = phones.filter(phone => {
-          return phone.name.toLowerCase().indexOf(query) !== -1;
-        });
-        // enf hack
-
-        this._catalogue.setData(phones);
-      },
-      error: (error) => { console.error(error); }
+      success: this._onPhonesLoaded.bind(this),
+      error: this._onLoadError.bind(this)
     });
+  }
 
+  _onPhonesLoaded(phones) {
+    // // hack until server can give filtered results
+    // query = query.toLowerCase();
+    //
+    // phones = phones.filter(phone => {
+    //   return phone.name.toLowerCase().indexOf(query) !== -1;
+    // });
+    // // enf hack
+
+    this._catalogue.setData(phones);
+  }
+
+  _onLoadError(error) {
+    console.error(error);
   }
 }

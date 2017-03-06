@@ -12,7 +12,9 @@ class HttpService {
     };
 
     xhr.onerror = () => {
-      options.error(new Error(xhr.status + ' ' + xhr.statusText));
+      options.error(
+        new Error(xhr.status + ' ' + xhr.statusText)
+      );
     };
 
     xhr.send();

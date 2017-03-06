@@ -1,12 +1,6 @@
-'use strict';
-
-class Search extends Component {
-  constructor(options) {
-    super(options.el);
-
-    this._field = this._el.querySelector('[data-element="field"]');
-
-    this._field.addEventListener('input', this._onFieldInput.bind(this));
+class Component {
+  constructor(element) {
+    this._el = element;
   }
 
   on(eventName, handler) {
@@ -17,15 +11,19 @@ class Search extends Component {
     this._el.removeEventListener(eventName, handler);
   }
 
+  show() {
+    this._el.classList.remove('js-hidden');
+  }
+
+  hide() {
+    this._el.classList.add('js-hidden');
+  }
+
   _trigger(eventName, data) {
     let myEvent = new CustomEvent(eventName, {
       detail: data
     });
 
     this._el.dispatchEvent(myEvent);
-  }
-
-  _onFieldInput() {
-    this._trigger('valueChanged', this._field.value);
   }
 }

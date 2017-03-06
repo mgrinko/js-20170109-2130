@@ -1,8 +1,9 @@
 'use strict';
 
-class PhoneCatalogue {
+class PhoneCatalogue extends Component {
   constructor(options) {
-    this._el = options.el;
+    super(options.el);
+
     this._phones = options.phones || [];
 
     this._render();
@@ -15,21 +16,6 @@ class PhoneCatalogue {
     this._render();
   }
 
-  on(eventName, handler) {
-    this._el.addEventListener(eventName, handler);
-  }
-
-  off(eventName, handler) {
-    this._el.removeEventListener(eventName, handler);
-  }
-
-  _trigger(eventName, data) {
-    let myEvent = new CustomEvent(eventName, {
-      detail: data
-    });
-
-    this._el.dispatchEvent(myEvent);
-  }
 
   _render() {
     let template = document.querySelector('#phone-catalogue-template').innerHTML;
