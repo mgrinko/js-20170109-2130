@@ -1,7 +1,5 @@
 import Component from '../component';
-import template from './template.html';
-
-let compiledTemplate = _.template(template);
+import compiledTemplate from './template.hbs';
 
 export default class PhoneCatalogue extends Component {
   constructor(options) {
