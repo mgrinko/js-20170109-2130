@@ -23,20 +23,14 @@ export default class PhonePage {
       let phoneId = event.detail;
 
       let phoneDetailsPromise = PhoneService.get(phoneId);
-      let mouseLeavePromise = this._catalogue.registerSelectedItemMouseLeaveHandler();
+      let mouseLeavePromise = this._catalogue.getMouseLeavePromise();
 
-      phoneDetailsPromise.then((phoneDetails) => {
-        this._showPhoneDetails(phoneDetails);
-      });
-
-      phoneDetailsPromise.then((phoneDetails) => {
-        alert('phone is loaded');
-      });
-
-      phoneDetailsPromise.catch((phoneDetails) => {
-        alert('phone loading error');
-      });
-
+      mouseLeavePromise
+        .then(() => phoneDetailsPromise)
+        .then(phoneDetails => {
+          this._showPhoneDetails(phoneDetails);
+        })
+        .catch(error => console.error(error));
     });
 
     this._loadPhones();

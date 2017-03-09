@@ -37,13 +37,15 @@ export default class PhoneCatalogue extends Component {
     this._trigger('phoneSelected', this.selectedItem.dataset.phoneId);
   }
 
-  registerSelectedItemMouseLeaveHandler(handler) {
-    let onMouseLeave = () => {
-      handler();
+  getMouseLeavePromise() {
 
-      this.selectedItem.removeEventListener('mouseleave', onMouseLeave);
-    };
+    return new Promise((resolve) => {
+      let onMouseLeave = () => {
+        resolve();
+        this.selectedItem.removeEventListener('mouseleave', onMouseLeave);
+      };
 
-    this.selectedItem.addEventListener('mouseleave', onMouseLeave);
+      this.selectedItem.addEventListener('mouseleave', onMouseLeave);
+    });
   }
 }
