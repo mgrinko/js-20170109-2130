@@ -24,7 +24,10 @@ export default class PhonePage {
 
       PhoneService.get(phoneId, {
         onSuccess: (phoneDetails) => {
-          this._showPhoneDetails(phoneDetails);
+          // начать слушать уход мышки
+          this._catalogue.registerSelectedItemMouseLeaveHandler(() => {
+            this._showPhoneDetails(phoneDetails);
+          });
         }
       });
     });

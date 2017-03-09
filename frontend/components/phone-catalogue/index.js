@@ -5,6 +5,8 @@ export default class PhoneCatalogue extends Component {
   constructor(options) {
     super(options.el);
 
+    this.selectedItem = null;
+
     this._phones = options.phones || [];
 
     this._render();
@@ -30,8 +32,18 @@ export default class PhoneCatalogue extends Component {
       return;
     }
 
-    let selectedPhoneItem = phoneItemLink.closest('[data-element="phoneItem"]');
+    this.selectedItem = phoneItemLink.closest('[data-element="phoneItem"]');
 
-    this._trigger('phoneSelected', selectedPhoneItem.dataset.phoneId);
+    this._trigger('phoneSelected', this.selectedItem.dataset.phoneId);
+  }
+
+  registerSelectedItemMouseLeaveHandler(handler) {
+    let onMouseLeave = () => {
+      handler();
+
+      this.selectedItem.removeEventListener('mouseleave', onMouseLeave);
+    };
+
+    this.selectedItem.addEventListener('mouseleave', onMouseLeave);
   }
 }
