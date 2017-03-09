@@ -1,6 +1,8 @@
 import Component from '../component';
 import compiledTemplate from './template.hbs';
 
+import globalEventBus from '../../services/global-events-service';
+
 export default class PhoneViewer extends Component {
   constructor(options) {
     super(options.el);
