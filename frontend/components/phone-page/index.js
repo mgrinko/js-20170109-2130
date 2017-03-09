@@ -25,12 +25,13 @@ export default class PhonePage {
       let phoneDetailsPromise = PhoneService.get(phoneId);
       let mouseLeavePromise = this._catalogue.getMouseLeavePromise();
 
-      mouseLeavePromise
-        .then(() => phoneDetailsPromise)
-        .then(phoneDetails => {
-          this._showPhoneDetails(phoneDetails);
-        })
-        .catch(error => console.error(error));
+      Promise.all([
+        phoneDetailsPromise,
+        mouseLeavePromise
+      ])
+        .then(resultArray => {
+          this._showPhoneDetails(resultArray[0]);
+        });
     });
 
     this._loadPhones();

@@ -2,6 +2,7 @@ function onError(error) {
   console.error(error);
 }
 
+
 class MyPromise {
   constructor(behaviourFunction) {
     behaviourFunction(this._resolve, this._reject)
