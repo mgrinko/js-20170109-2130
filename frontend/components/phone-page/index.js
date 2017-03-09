@@ -22,14 +22,31 @@ export default class PhonePage {
     this._catalogue.on('phoneSelected', event => {
       let phoneId = event.detail;
 
+      let mouseHasLeft = false;
+      let serverData = null;
+
       PhoneService.get(phoneId, {
         onSuccess: (phoneDetails) => {
-          // начать слушать уход мышки
-          this._catalogue.registerSelectedItemMouseLeaveHandler(() => {
-            this._showPhoneDetails(phoneDetails);
-          });
+          serverData = phoneDetails;
+
+          if (!mouseHasLeft) {
+            return;
+          }
+
+          this._showPhoneDetails(phoneDetails);
         }
       });
+
+      this._catalogue.registerSelectedItemMouseLeaveHandler(() => {
+        mouseHasLeft = true;
+
+        if (!serverData) {
+          return;
+        }
+
+        this._showPhoneDetails(serverData);
+      });
+
     });
 
     this._loadPhones();
