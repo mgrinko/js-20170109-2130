@@ -2,27 +2,44 @@ function onError(error) {
   console.error(error);
 }
 
-export default class HttpService {
-  static request(url, options = {}) {
-    let method = options.method || 'GET';
-    let xhr = new XMLHttpRequest();
+class MyPromise {
+  constructor(behaviourFunction) {
+    behaviourFunction(this._resolve, this._reject)
+  }
 
-    options.error = options.error || onError;
+  _resolve(data) {
+    handlers.forEach(handler => {
+      handler(data);
+    })
+  }
 
-    xhr.open(method, url, true);
+  _reject(error) {
+    errorHandlers.forEach(handler => {
+      handler(error);
+    })
+  }
+}
 
-    xhr.onload = () => {
-      let data = JSON.parse(xhr.responseText);
+export default {
+  request(url, options = {}) {
 
-      options.success(data);
-    };
+    return new Promise((resolve, reject) => {
+      let method = options.method || 'GET';
+      let xhr = new XMLHttpRequest();
 
-    xhr.onerror = () => {
-      options.error(
-        new Error(xhr.status + ' ' + xhr.statusText)
-      );
-    };
+      xhr.open(method, url, true);
 
-    xhr.send();
+      xhr.onload = () => {
+        let data = JSON.parse(xhr.responseText);
+
+        resolve(data);
+      };
+
+      xhr.onerror = () => {
+        reject(new Error(xhr.status + ' ' + xhr.statusText));
+      };
+
+      xhr.send();
+    });
   }
 }

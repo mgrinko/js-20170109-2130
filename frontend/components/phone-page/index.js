@@ -22,29 +22,19 @@ export default class PhonePage {
     this._catalogue.on('phoneSelected', event => {
       let phoneId = event.detail;
 
-      let mouseHasLeft = false;
-      let serverData = null;
+      let phoneDetailsPromise = PhoneService.get(phoneId);
+      let mouseLeavePromise = this._catalogue.registerSelectedItemMouseLeaveHandler();
 
-      PhoneService.get(phoneId, {
-        onSuccess: (phoneDetails) => {
-          serverData = phoneDetails;
-
-          if (!mouseHasLeft) {
-            return;
-          }
-
-          this._showPhoneDetails(phoneDetails);
-        }
+      phoneDetailsPromise.then((phoneDetails) => {
+        this._showPhoneDetails(phoneDetails);
       });
 
-      this._catalogue.registerSelectedItemMouseLeaveHandler(() => {
-        mouseHasLeft = true;
+      phoneDetailsPromise.then((phoneDetails) => {
+        alert('phone is loaded');
+      });
 
-        if (!serverData) {
-          return;
-        }
-
-        this._showPhoneDetails(serverData);
+      phoneDetailsPromise.catch((phoneDetails) => {
+        alert('phone loading error');
       });
 
     });
@@ -95,10 +85,9 @@ export default class PhonePage {
   }
 
   _loadPhones(query = '') {
-    PhoneService.getAll(query, {
-      onSuccess: (phones) => {
+    PhoneService.getAll(query)
+      .then(phones => {
         this._catalogue.setData(phones);
-      }
-    });
+      });
   }
 }

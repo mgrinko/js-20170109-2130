@@ -1,30 +1,25 @@
 import HttpService from './http-service';
 
 export default {
-  getAll(query, { onSuccess, onError }) {
+  getAll(query) {
     let url = '/data/phones.json';
 
     if (query) {
       url += `?query=${query}`;
     }
 
-    HttpService.request(url, {
-      success: (phones) => {
-        let filteredphones = this._filterPhones(phones, query);
-
-        onSuccess(filteredphones);
-      },
-      error: onError
-    });
+    return HttpService.request(url);
+      // success: (phones) => {
+      //   let filteredphones = this._filterPhones(phones, query);
+      //
+      //   onSuccess(filteredphones);
+      // },
   },
 
-  get(id, { onSuccess, onError }) {
+  get(id) {
     let url = `/data/phones/${id}.json`;
 
-    HttpService.request(url, {
-      success: onSuccess,
-      error: onError
-    });
+    return HttpService.request(url);
   },
 
   _filterPhones(phones, query) {
