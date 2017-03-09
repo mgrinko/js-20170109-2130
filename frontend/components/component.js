@@ -12,11 +12,11 @@ export default class Component {
   }
 
   show() {
-    this._el.classList.remove('components-hidden');
+    this._el.classList.remove('js-hidden');
   }
 
   hide() {
-    this._el.classList.add('components-hidden');
+    this._el.classList.add('js-hidden');
   }
 
   _trigger(eventName, data) {

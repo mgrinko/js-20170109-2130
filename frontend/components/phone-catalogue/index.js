@@ -1,8 +1,6 @@
 import Component from '../component';
 import compiledTemplate from './template.hbs';
 
-import './style.css';
-
 export default class PhoneCatalogue extends Component {
   constructor(options) {
     super(options.el);

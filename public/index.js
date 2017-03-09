@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 32);
+/******/ 	return __webpack_require__(__webpack_require__.s = 30);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -290,12 +290,12 @@ var Component = function () {
   }, {
     key: 'show',
     value: function show() {
-      this._el.classList.remove('components-hidden');
+      this._el.classList.remove('js-hidden');
     }
   }, {
     key: 'hide',
     value: function hide() {
-      this._el.classList.add('components-hidden');
+      this._el.classList.add('js-hidden');
     }
   }, {
     key: '_trigger',
@@ -317,6 +317,15 @@ exports.default = Component;
 /* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
+// Create a simple path alias to allow browserify to resolve
+// the runtime on a supported path.
+module.exports = __webpack_require__(14)['default'];
+
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
 "use strict";
 
 
@@ -332,11 +341,11 @@ var _exception = __webpack_require__(1);
 
 var _exception2 = _interopRequireDefault(_exception);
 
-var _helpers = __webpack_require__(16);
+var _helpers = __webpack_require__(17);
 
-var _decorators = __webpack_require__(14);
+var _decorators = __webpack_require__(15);
 
-var _logger = __webpack_require__(24);
+var _logger = __webpack_require__(25);
 
 var _logger2 = _interopRequireDefault(_logger);
 
@@ -425,7 +434,7 @@ exports.logger = _logger2['default'];
 
 
 /***/ }),
-/* 4 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -437,23 +446,23 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _phoneViewer = __webpack_require__(6);
+var _phoneViewer = __webpack_require__(7);
 
 var _phoneViewer2 = _interopRequireDefault(_phoneViewer);
 
-var _phoneCatalogue = __webpack_require__(5);
+var _phoneCatalogue = __webpack_require__(6);
 
 var _phoneCatalogue2 = _interopRequireDefault(_phoneCatalogue);
 
-var _search = __webpack_require__(7);
+var _search = __webpack_require__(8);
 
 var _search2 = _interopRequireDefault(_search);
 
-var _shoppingCart = __webpack_require__(8);
+var _shoppingCart = __webpack_require__(9);
 
 var _shoppingCart2 = _interopRequireDefault(_shoppingCart);
 
-var _httpService = __webpack_require__(9);
+var _httpService = __webpack_require__(10);
 
 var _httpService2 = _interopRequireDefault(_httpService);
 
@@ -476,8 +485,22 @@ var PhonePage = function () {
   _createClass(PhonePage, [{
     key: 'initViewer',
     value: function initViewer() {
+      var _this = this;
+
       this._viewer = new _phoneViewer2.default({
         el: this._el.querySelector('[data-component="phoneViewer"]')
+      });
+
+      this._viewer.on('add', function (event) {
+        var phone = event.detail;
+
+        _this._shoppingCart.addItem(phone.id);
+      });
+
+      this._viewer.on('back', function () {
+        window.history.back();
+        _this._viewer.hide();
+        _this._catalogue.show();
       });
     }
   }, {
@@ -490,7 +513,7 @@ var PhonePage = function () {
   }, {
     key: 'initSearch',
     value: function initSearch() {
-      var _this = this;
+      var _this2 = this;
 
       this._search = new _search2.default({
         el: this._el.querySelector('[data-component="search"]')
@@ -499,13 +522,13 @@ var PhonePage = function () {
       this._search.on('valueChanged', function (event) {
         var query = event.detail;
 
-        _this._loadPhones(query);
+        _this2._loadPhones(query);
       });
     }
   }, {
     key: 'initCatalogue',
     value: function initCatalogue() {
-      var _this2 = this;
+      var _this3 = this;
 
       this._catalogue = new _phoneCatalogue2.default({
         el: this._el.querySelector('[data-component="phoneCatalogue"]')
@@ -514,7 +537,7 @@ var PhonePage = function () {
       this._catalogue.on('phoneSelected', function (event) {
         var phoneId = event.detail;
 
-        _this2._loadPhoneDetails(phoneId);
+        _this3._loadPhoneDetails(phoneId);
       });
 
       this._loadPhones();
@@ -525,9 +548,7 @@ var PhonePage = function () {
       var url = '/data/phones/' + phoneId + '.json';
 
       _httpService2.default.request(url, {
-        method: 'GET',
-        success: this._onPhoneDetailsLoaded.bind(this),
-        error: this._onLoadError.bind(this)
+        success: this._onPhoneDetailsLoaded.bind(this)
       });
     }
   }, {
@@ -549,9 +570,7 @@ var PhonePage = function () {
       }
 
       _httpService2.default.request(url, {
-        method: 'GET',
-        success: this._onPhonesLoaded.bind(this),
-        error: this._onLoadError.bind(this)
+        success: this._onPhonesLoaded.bind(this)
       });
     }
   }, {
@@ -567,11 +586,6 @@ var PhonePage = function () {
 
       this._catalogue.setData(phones);
     }
-  }, {
-    key: '_onLoadError',
-    value: function _onLoadError(error) {
-      console.error(error);
-    }
   }]);
 
   return PhonePage;
@@ -580,7 +594,7 @@ var PhonePage = function () {
 exports.default = PhonePage;
 
 /***/ }),
-/* 5 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -596,11 +610,9 @@ var _component = __webpack_require__(2);
 
 var _component2 = _interopRequireDefault(_component);
 
-var _template = __webpack_require__(12);
+var _template = __webpack_require__(11);
 
 var _template2 = _interopRequireDefault(_template);
-
-__webpack_require__(30);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -660,7 +672,7 @@ var PhoneCatalogue = function (_Component) {
 exports.default = PhoneCatalogue;
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -676,6 +688,10 @@ var _component = __webpack_require__(2);
 
 var _component2 = _interopRequireDefault(_component);
 
+var _template = __webpack_require__(12);
+
+var _template2 = _interopRequireDefault(_template);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -690,9 +706,11 @@ var PhoneViewer = function (_Component) {
   function PhoneViewer(options) {
     _classCallCheck(this, PhoneViewer);
 
-    return _possibleConstructorReturn(this, (PhoneViewer.__proto__ || Object.getPrototypeOf(PhoneViewer)).call(this, options.el));
+    var _this = _possibleConstructorReturn(this, (PhoneViewer.__proto__ || Object.getPrototypeOf(PhoneViewer)).call(this, options.el));
 
-    //this._el.addEventListener('click', this._onPhoneClick.bind(this))
+    _this._el.addEventListener('click', _this._onAddToBasketClick.bind(_this));
+    _this._el.addEventListener('click', _this._onBackClick.bind(_this));
+    return _this;
   }
 
   _createClass(PhoneViewer, [{
@@ -704,26 +722,28 @@ var PhoneViewer = function (_Component) {
   }, {
     key: '_render',
     value: function _render() {
-      var template = document.querySelector('#phone-viewer-template').innerHTML;
-      var compiled = _.template(template);
-
-      this._el.innerHTML = compiled({
+      this._el.innerHTML = (0, _template2.default)({
         phone: this._phone
       });
     }
+  }, {
+    key: '_onAddToBasketClick',
+    value: function _onAddToBasketClick(event) {
+      if (!event.target.closest('[data-element="addToBasket"]')) {
+        return;
+      }
 
-    // _onPhoneClick(event) {
-    //   let phoneItemLink = event.target.closest('[data-element="phoneItemLink"]');
-    //
-    //   if (!phoneItemLink) {
-    //     return;
-    //   }
-    //
-    //   let selectedPhoneItem = phoneItemLink.closest('[data-element="phoneItem"]');
-    //
-    //   this._trigger('phoneSelected', selectedPhoneItem.dataset.phoneId);
-    // }
+      this._trigger('add', this._phone);
+    }
+  }, {
+    key: '_onBackClick',
+    value: function _onBackClick(event) {
+      if (!event.target.closest('[data-element="backButton"]')) {
+        return;
+      }
 
+      this._trigger('back');
+    }
   }]);
 
   return PhoneViewer;
@@ -732,7 +752,7 @@ var PhoneViewer = function (_Component) {
 exports.default = PhoneViewer;
 
 /***/ }),
-/* 7 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -771,25 +791,6 @@ var Search = function (_Component) {
   }
 
   _createClass(Search, [{
-    key: 'on',
-    value: function on(eventName, handler) {
-      this._el.addEventListener(eventName, handler);
-    }
-  }, {
-    key: 'off',
-    value: function off(eventName, handler) {
-      this._el.removeEventListener(eventName, handler);
-    }
-  }, {
-    key: '_trigger',
-    value: function _trigger(eventName, data) {
-      var myEvent = new CustomEvent(eventName, {
-        detail: data
-      });
-
-      this._el.dispatchEvent(myEvent);
-    }
-  }, {
     key: '_onFieldInput',
     value: function _onFieldInput() {
       this._trigger('valueChanged', this._field.value);
@@ -802,7 +803,7 @@ var Search = function (_Component) {
 exports.default = Search;
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -818,7 +819,7 @@ var _component = __webpack_require__(2);
 
 var _component2 = _interopRequireDefault(_component);
 
-var _template = __webpack_require__(33);
+var _template = __webpack_require__(13);
 
 var _template2 = _interopRequireDefault(_template);
 
@@ -865,7 +866,7 @@ var ShoppingCart = function (_Component) {
 exports.default = ShoppingCart;
 
 /***/ }),
-/* 9 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -879,6 +880,10 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+function onError(error) {
+  console.error(error);
+}
+
 var HttpService = function () {
   function HttpService() {
     _classCallCheck(this, HttpService);
@@ -891,6 +896,8 @@ var HttpService = function () {
 
       var method = options.method || 'GET';
       var xhr = new XMLHttpRequest();
+
+      options.error = options.error || onError;
 
       xhr.open(method, url, true);
 
@@ -914,80 +921,10 @@ var HttpService = function () {
 exports.default = HttpService;
 
 /***/ }),
-/* 10 */
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(11)();
-// imports
-
-
-// module
-exports.push([module.i, ".phones {\n  background-color: aqua;\n}", ""]);
-
-// exports
-
-
-/***/ }),
 /* 11 */
-/***/ (function(module, exports) {
-
-/*
-	MIT License http://www.opensource.org/licenses/mit-license.php
-	Author Tobias Koppers @sokra
-*/
-// css base code, injected by the css-loader
-module.exports = function() {
-	var list = [];
-
-	// return the list of modules as css string
-	list.toString = function toString() {
-		var result = [];
-		for(var i = 0; i < this.length; i++) {
-			var item = this[i];
-			if(item[2]) {
-				result.push("@media " + item[2] + "{" + item[1] + "}");
-			} else {
-				result.push(item[1]);
-			}
-		}
-		return result.join("");
-	};
-
-	// import a list of modules into the list
-	list.i = function(modules, mediaQuery) {
-		if(typeof modules === "string")
-			modules = [[null, modules, ""]];
-		var alreadyImportedModules = {};
-		for(var i = 0; i < this.length; i++) {
-			var id = this[i][0];
-			if(typeof id === "number")
-				alreadyImportedModules[id] = true;
-		}
-		for(i = 0; i < modules.length; i++) {
-			var item = modules[i];
-			// skip already imported module
-			// this implementation is not 100% perfect for weird media query combinations
-			//  when a module is imported multiple times with different media queries.
-			//  I hope this will never occur (Hey this way we have smaller bundles)
-			if(typeof item[0] !== "number" || !alreadyImportedModules[item[0]]) {
-				if(mediaQuery && !item[2]) {
-					item[2] = mediaQuery;
-				} else if(mediaQuery) {
-					item[2] = "(" + item[2] + ") and (" + mediaQuery + ")";
-				}
-				list.push(item);
-			}
-		}
-	};
-	return list;
-};
-
-
-/***/ }),
-/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var Handlebars = __webpack_require__(28);
+var Handlebars = __webpack_require__(3);
 function __default(obj) { return obj && (obj.__esModule ? obj["default"] : obj); }
 module.exports = (Handlebars["default"] || Handlebars).template({"1":function(container,depth0,helpers,partials,data,blockParams) {
     var stack1, alias1=container.lambda, alias2=container.escapeExpression;
@@ -1016,7 +953,58 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
 },"useData":true,"useBlockParams":true});
 
 /***/ }),
+/* 12 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var Handlebars = __webpack_require__(3);
+function __default(obj) { return obj && (obj.__esModule ? obj["default"] : obj); }
+module.exports = (Handlebars["default"] || Handlebars).template({"1":function(container,depth0,helpers,partials,data,blockParams) {
+    return "      <li>\n        <img src=\""
+    + container.escapeExpression(container.lambda(blockParams[0][0], depth0))
+    + "\">\n      </li>\n";
+},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data,blockParams) {
+    var stack1, alias1=container.lambda;
+
+  return "<button data-element=\"backButton\">Back</button> <button data-element=\"addToBasket\">Add to basket</button>\n<div>\n  <img class=\"phone\" src=\""
+    + container.escapeExpression(alias1(((stack1 = ((stack1 = (depth0 != null ? depth0.phone : depth0)) != null ? stack1.images : stack1)) != null ? stack1["0"] : stack1), depth0))
+    + "\">\n\n  <h1>"
+    + ((stack1 = alias1(((stack1 = (depth0 != null ? depth0.phone : depth0)) != null ? stack1.name : stack1), depth0)) != null ? stack1 : "")
+    + "</h1>\n\n  <p>"
+    + ((stack1 = alias1(((stack1 = (depth0 != null ? depth0.phone : depth0)) != null ? stack1.description : stack1), depth0)) != null ? stack1 : "")
+    + "</p>\n\n  <ul class=\"phone-thumbs\">\n"
+    + ((stack1 = helpers.each.call(depth0 != null ? depth0 : {},((stack1 = (depth0 != null ? depth0.phone : depth0)) != null ? stack1.images : stack1),{"name":"each","hash":{},"fn":container.program(1, data, 1, blockParams),"inverse":container.noop,"data":data,"blockParams":blockParams})) != null ? stack1 : "")
+    + "  </ul>\n</div>";
+},"useData":true,"useBlockParams":true});
+
+/***/ }),
 /* 13 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var Handlebars = __webpack_require__(3);
+function __default(obj) { return obj && (obj.__esModule ? obj["default"] : obj); }
+module.exports = (Handlebars["default"] || Handlebars).template({"1":function(container,depth0,helpers,partials,data,blockParams) {
+    var stack1;
+
+  return "\n  <ul class=\"selected-phones\">\n"
+    + ((stack1 = helpers.each.call(depth0 != null ? depth0 : {},(depth0 != null ? depth0.orderItems : depth0),{"name":"each","hash":{},"fn":container.program(2, data, 1, blockParams),"inverse":container.noop,"data":data,"blockParams":blockParams})) != null ? stack1 : "")
+    + "  </ul>\n\n";
+},"2":function(container,depth0,helpers,partials,data,blockParams) {
+    var stack1;
+
+  return "      <li>"
+    + ((stack1 = container.lambda(blockParams[0][0], depth0)) != null ? stack1 : "")
+    + "</li>\n";
+},"4":function(container,depth0,helpers,partials,data) {
+    return "  <p>No items yet!</p>\n";
+},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data,blockParams) {
+    var stack1;
+
+  return "<h3>Shopping cart</h3>\n\n"
+    + ((stack1 = helpers["if"].call(depth0 != null ? depth0 : {},((stack1 = (depth0 != null ? depth0.orderItems : depth0)) != null ? stack1.length : stack1),{"name":"if","hash":{},"fn":container.program(1, data, 0, blockParams),"inverse":container.program(4, data, 0, blockParams),"data":data,"blockParams":blockParams})) != null ? stack1 : "");
+},"useData":true,"useBlockParams":true});
+
+/***/ }),
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1031,14 +1019,14 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'd
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
 
-var _handlebarsBase = __webpack_require__(3);
+var _handlebarsBase = __webpack_require__(4);
 
 var base = _interopRequireWildcard(_handlebarsBase);
 
 // Each of these augment the Handlebars object. No need to setup here.
 // (This is done to easily share code between commonjs and browse envs)
 
-var _handlebarsSafeString = __webpack_require__(27);
+var _handlebarsSafeString = __webpack_require__(28);
 
 var _handlebarsSafeString2 = _interopRequireDefault(_handlebarsSafeString);
 
@@ -1050,11 +1038,11 @@ var _handlebarsUtils = __webpack_require__(0);
 
 var Utils = _interopRequireWildcard(_handlebarsUtils);
 
-var _handlebarsRuntime = __webpack_require__(26);
+var _handlebarsRuntime = __webpack_require__(27);
 
 var runtime = _interopRequireWildcard(_handlebarsRuntime);
 
-var _handlebarsNoConflict = __webpack_require__(25);
+var _handlebarsNoConflict = __webpack_require__(26);
 
 var _handlebarsNoConflict2 = _interopRequireDefault(_handlebarsNoConflict);
 
@@ -1089,7 +1077,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1101,7 +1089,7 @@ exports.registerDefaultDecorators = registerDefaultDecorators;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _decoratorsInline = __webpack_require__(15);
+var _decoratorsInline = __webpack_require__(16);
 
 var _decoratorsInline2 = _interopRequireDefault(_decoratorsInline);
 
@@ -1112,7 +1100,7 @@ function registerDefaultDecorators(instance) {
 
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1148,7 +1136,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1160,31 +1148,31 @@ exports.registerDefaultHelpers = registerDefaultHelpers;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _helpersBlockHelperMissing = __webpack_require__(17);
+var _helpersBlockHelperMissing = __webpack_require__(18);
 
 var _helpersBlockHelperMissing2 = _interopRequireDefault(_helpersBlockHelperMissing);
 
-var _helpersEach = __webpack_require__(18);
+var _helpersEach = __webpack_require__(19);
 
 var _helpersEach2 = _interopRequireDefault(_helpersEach);
 
-var _helpersHelperMissing = __webpack_require__(19);
+var _helpersHelperMissing = __webpack_require__(20);
 
 var _helpersHelperMissing2 = _interopRequireDefault(_helpersHelperMissing);
 
-var _helpersIf = __webpack_require__(20);
+var _helpersIf = __webpack_require__(21);
 
 var _helpersIf2 = _interopRequireDefault(_helpersIf);
 
-var _helpersLog = __webpack_require__(21);
+var _helpersLog = __webpack_require__(22);
 
 var _helpersLog2 = _interopRequireDefault(_helpersLog);
 
-var _helpersLookup = __webpack_require__(22);
+var _helpersLookup = __webpack_require__(23);
 
 var _helpersLookup2 = _interopRequireDefault(_helpersLookup);
 
-var _helpersWith = __webpack_require__(23);
+var _helpersWith = __webpack_require__(24);
 
 var _helpersWith2 = _interopRequireDefault(_helpersWith);
 
@@ -1201,7 +1189,7 @@ function registerDefaultHelpers(instance) {
 
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1247,7 +1235,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1348,7 +1336,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1380,7 +1368,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 20 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1416,7 +1404,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 21 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1449,7 +1437,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 22 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1468,7 +1456,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 23 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1508,7 +1496,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 24 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1562,7 +1550,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 25 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1587,10 +1575,10 @@ exports['default'] = function (Handlebars) {
 module.exports = exports['default'];
 //# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uLy4uLy4uL2xpYi9oYW5kbGViYXJzL25vLWNvbmZsaWN0LmpzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiI7Ozs7O3FCQUNlLFVBQVMsVUFBVSxFQUFFOztBQUVsQyxNQUFJLElBQUksR0FBRyxPQUFPLE1BQU0sS0FBSyxXQUFXLEdBQUcsTUFBTSxHQUFHLE1BQU07TUFDdEQsV0FBVyxHQUFHLElBQUksQ0FBQyxVQUFVLENBQUM7O0FBRWxDLFlBQVUsQ0FBQyxVQUFVLEdBQUcsWUFBVztBQUNqQyxRQUFJLElBQUksQ0FBQyxVQUFVLEtBQUssVUFBVSxFQUFFO0FBQ2xDLFVBQUksQ0FBQyxVQUFVLEdBQUcsV0FBVyxDQUFDO0tBQy9CO0FBQ0QsV0FBTyxVQUFVLENBQUM7R0FDbkIsQ0FBQztDQUNIIiwiZmlsZSI6Im5vLWNvbmZsaWN0LmpzIiwic291cmNlc0NvbnRlbnQiOlsiLyogZ2xvYmFsIHdpbmRvdyAqL1xuZXhwb3J0IGRlZmF1bHQgZnVuY3Rpb24oSGFuZGxlYmFycykge1xuICAvKiBpc3RhbmJ1bCBpZ25vcmUgbmV4dCAqL1xuICBsZXQgcm9vdCA9IHR5cGVvZiBnbG9iYWwgIT09ICd1bmRlZmluZWQnID8gZ2xvYmFsIDogd2luZG93LFxuICAgICAgJEhhbmRsZWJhcnMgPSByb290LkhhbmRsZWJhcnM7XG4gIC8qIGlzdGFuYnVsIGlnbm9yZSBuZXh0ICovXG4gIEhhbmRsZWJhcnMubm9Db25mbGljdCA9IGZ1bmN0aW9uKCkge1xuICAgIGlmIChyb290LkhhbmRsZWJhcnMgPT09IEhhbmRsZWJhcnMpIHtcbiAgICAgIHJvb3QuSGFuZGxlYmFycyA9ICRIYW5kbGViYXJzO1xuICAgIH1cbiAgICByZXR1cm4gSGFuZGxlYmFycztcbiAgfTtcbn1cbiJdfQ==
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(31)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(29)))
 
 /***/ }),
-/* 26 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1619,7 +1607,7 @@ var _exception = __webpack_require__(1);
 
 var _exception2 = _interopRequireDefault(_exception);
 
-var _base = __webpack_require__(3);
+var _base = __webpack_require__(4);
 
 function checkRevision(compilerInfo) {
   var compilerRevision = compilerInfo && compilerInfo[0] || 1,
@@ -1894,7 +1882,7 @@ function executeDecorators(fn, prog, container, depths, data, blockParams) {
 
 
 /***/ }),
-/* 27 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1916,294 +1904,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 28 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// Create a simple path alias to allow browserify to resolve
-// the runtime on a supported path.
-module.exports = __webpack_require__(13)['default'];
-
-
-/***/ }),
 /* 29 */
-/***/ (function(module, exports) {
-
-/*
-	MIT License http://www.opensource.org/licenses/mit-license.php
-	Author Tobias Koppers @sokra
-*/
-var stylesInDom = {},
-	memoize = function(fn) {
-		var memo;
-		return function () {
-			if (typeof memo === "undefined") memo = fn.apply(this, arguments);
-			return memo;
-		};
-	},
-	isOldIE = memoize(function() {
-		return /msie [6-9]\b/.test(self.navigator.userAgent.toLowerCase());
-	}),
-	getHeadElement = memoize(function () {
-		return document.head || document.getElementsByTagName("head")[0];
-	}),
-	singletonElement = null,
-	singletonCounter = 0,
-	styleElementsInsertedAtTop = [];
-
-module.exports = function(list, options) {
-	if(typeof DEBUG !== "undefined" && DEBUG) {
-		if(typeof document !== "object") throw new Error("The style-loader cannot be used in a non-browser environment");
-	}
-
-	options = options || {};
-	// Force single-tag solution on IE6-9, which has a hard limit on the # of <style>
-	// tags it will allow on a page
-	if (typeof options.singleton === "undefined") options.singleton = isOldIE();
-
-	// By default, add <style> tags to the bottom of <head>.
-	if (typeof options.insertAt === "undefined") options.insertAt = "bottom";
-
-	var styles = listToStyles(list);
-	addStylesToDom(styles, options);
-
-	return function update(newList) {
-		var mayRemove = [];
-		for(var i = 0; i < styles.length; i++) {
-			var item = styles[i];
-			var domStyle = stylesInDom[item.id];
-			domStyle.refs--;
-			mayRemove.push(domStyle);
-		}
-		if(newList) {
-			var newStyles = listToStyles(newList);
-			addStylesToDom(newStyles, options);
-		}
-		for(var i = 0; i < mayRemove.length; i++) {
-			var domStyle = mayRemove[i];
-			if(domStyle.refs === 0) {
-				for(var j = 0; j < domStyle.parts.length; j++)
-					domStyle.parts[j]();
-				delete stylesInDom[domStyle.id];
-			}
-		}
-	};
-}
-
-function addStylesToDom(styles, options) {
-	for(var i = 0; i < styles.length; i++) {
-		var item = styles[i];
-		var domStyle = stylesInDom[item.id];
-		if(domStyle) {
-			domStyle.refs++;
-			for(var j = 0; j < domStyle.parts.length; j++) {
-				domStyle.parts[j](item.parts[j]);
-			}
-			for(; j < item.parts.length; j++) {
-				domStyle.parts.push(addStyle(item.parts[j], options));
-			}
-		} else {
-			var parts = [];
-			for(var j = 0; j < item.parts.length; j++) {
-				parts.push(addStyle(item.parts[j], options));
-			}
-			stylesInDom[item.id] = {id: item.id, refs: 1, parts: parts};
-		}
-	}
-}
-
-function listToStyles(list) {
-	var styles = [];
-	var newStyles = {};
-	for(var i = 0; i < list.length; i++) {
-		var item = list[i];
-		var id = item[0];
-		var css = item[1];
-		var media = item[2];
-		var sourceMap = item[3];
-		var part = {css: css, media: media, sourceMap: sourceMap};
-		if(!newStyles[id])
-			styles.push(newStyles[id] = {id: id, parts: [part]});
-		else
-			newStyles[id].parts.push(part);
-	}
-	return styles;
-}
-
-function insertStyleElement(options, styleElement) {
-	var head = getHeadElement();
-	var lastStyleElementInsertedAtTop = styleElementsInsertedAtTop[styleElementsInsertedAtTop.length - 1];
-	if (options.insertAt === "top") {
-		if(!lastStyleElementInsertedAtTop) {
-			head.insertBefore(styleElement, head.firstChild);
-		} else if(lastStyleElementInsertedAtTop.nextSibling) {
-			head.insertBefore(styleElement, lastStyleElementInsertedAtTop.nextSibling);
-		} else {
-			head.appendChild(styleElement);
-		}
-		styleElementsInsertedAtTop.push(styleElement);
-	} else if (options.insertAt === "bottom") {
-		head.appendChild(styleElement);
-	} else {
-		throw new Error("Invalid value for parameter 'insertAt'. Must be 'top' or 'bottom'.");
-	}
-}
-
-function removeStyleElement(styleElement) {
-	styleElement.parentNode.removeChild(styleElement);
-	var idx = styleElementsInsertedAtTop.indexOf(styleElement);
-	if(idx >= 0) {
-		styleElementsInsertedAtTop.splice(idx, 1);
-	}
-}
-
-function createStyleElement(options) {
-	var styleElement = document.createElement("style");
-	styleElement.type = "text/css";
-	insertStyleElement(options, styleElement);
-	return styleElement;
-}
-
-function createLinkElement(options) {
-	var linkElement = document.createElement("link");
-	linkElement.rel = "stylesheet";
-	insertStyleElement(options, linkElement);
-	return linkElement;
-}
-
-function addStyle(obj, options) {
-	var styleElement, update, remove;
-
-	if (options.singleton) {
-		var styleIndex = singletonCounter++;
-		styleElement = singletonElement || (singletonElement = createStyleElement(options));
-		update = applyToSingletonTag.bind(null, styleElement, styleIndex, false);
-		remove = applyToSingletonTag.bind(null, styleElement, styleIndex, true);
-	} else if(obj.sourceMap &&
-		typeof URL === "function" &&
-		typeof URL.createObjectURL === "function" &&
-		typeof URL.revokeObjectURL === "function" &&
-		typeof Blob === "function" &&
-		typeof btoa === "function") {
-		styleElement = createLinkElement(options);
-		update = updateLink.bind(null, styleElement);
-		remove = function() {
-			removeStyleElement(styleElement);
-			if(styleElement.href)
-				URL.revokeObjectURL(styleElement.href);
-		};
-	} else {
-		styleElement = createStyleElement(options);
-		update = applyToTag.bind(null, styleElement);
-		remove = function() {
-			removeStyleElement(styleElement);
-		};
-	}
-
-	update(obj);
-
-	return function updateStyle(newObj) {
-		if(newObj) {
-			if(newObj.css === obj.css && newObj.media === obj.media && newObj.sourceMap === obj.sourceMap)
-				return;
-			update(obj = newObj);
-		} else {
-			remove();
-		}
-	};
-}
-
-var replaceText = (function () {
-	var textStore = [];
-
-	return function (index, replacement) {
-		textStore[index] = replacement;
-		return textStore.filter(Boolean).join('\n');
-	};
-})();
-
-function applyToSingletonTag(styleElement, index, remove, obj) {
-	var css = remove ? "" : obj.css;
-
-	if (styleElement.styleSheet) {
-		styleElement.styleSheet.cssText = replaceText(index, css);
-	} else {
-		var cssNode = document.createTextNode(css);
-		var childNodes = styleElement.childNodes;
-		if (childNodes[index]) styleElement.removeChild(childNodes[index]);
-		if (childNodes.length) {
-			styleElement.insertBefore(cssNode, childNodes[index]);
-		} else {
-			styleElement.appendChild(cssNode);
-		}
-	}
-}
-
-function applyToTag(styleElement, obj) {
-	var css = obj.css;
-	var media = obj.media;
-
-	if(media) {
-		styleElement.setAttribute("media", media)
-	}
-
-	if(styleElement.styleSheet) {
-		styleElement.styleSheet.cssText = css;
-	} else {
-		while(styleElement.firstChild) {
-			styleElement.removeChild(styleElement.firstChild);
-		}
-		styleElement.appendChild(document.createTextNode(css));
-	}
-}
-
-function updateLink(linkElement, obj) {
-	var css = obj.css;
-	var sourceMap = obj.sourceMap;
-
-	if(sourceMap) {
-		// http://stackoverflow.com/a/26603875
-		css += "\n/*# sourceMappingURL=data:application/json;base64," + btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap)))) + " */";
-	}
-
-	var blob = new Blob([css], { type: "text/css" });
-
-	var oldSrc = linkElement.href;
-
-	linkElement.href = URL.createObjectURL(blob);
-
-	if(oldSrc)
-		URL.revokeObjectURL(oldSrc);
-}
-
-
-/***/ }),
-/* 30 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// style-loader: Adds some css to the DOM by adding a <style> tag
-
-// load the styles
-var content = __webpack_require__(10);
-if(typeof content === 'string') content = [[module.i, content, '']];
-// add the styles to the DOM
-var update = __webpack_require__(29)(content, {});
-if(content.locals) module.exports = content.locals;
-// Hot Module Replacement
-if(false) {
-	// When the styles change, update the <style> tags
-	if(!content.locals) {
-		module.hot.accept("!!../../../node_modules/css-loader/index.js!./style.css", function() {
-			var newContent = require("!!../../../node_modules/css-loader/index.js!./style.css");
-			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-			update(newContent);
-		});
-	}
-	// When the module is disposed, remove the <style> tags
-	module.hot.dispose(function() { update(); });
-}
-
-/***/ }),
-/* 31 */
 /***/ (function(module, exports) {
 
 var g;
@@ -2230,46 +1931,19 @@ module.exports = g;
 
 
 /***/ }),
-/* 32 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _phonePage = __webpack_require__(4);
+var _phonePage = __webpack_require__(5);
 
 var _phonePage2 = _interopRequireDefault(_phonePage);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var page = new _phonePage2.default({ el: document.body });
-
-/***/ }),
-/* 33 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var Handlebars = __webpack_require__(28);
-function __default(obj) { return obj && (obj.__esModule ? obj["default"] : obj); }
-module.exports = (Handlebars["default"] || Handlebars).template({"1":function(container,depth0,helpers,partials,data,blockParams) {
-    var stack1;
-
-  return "\n  <ul class=\"selected-phones\">\n"
-    + ((stack1 = helpers.each.call(depth0 != null ? depth0 : {},(depth0 != null ? depth0.orderItems : depth0),{"name":"each","hash":{},"fn":container.program(2, data, 1, blockParams),"inverse":container.noop,"data":data,"blockParams":blockParams})) != null ? stack1 : "")
-    + "  </ul>\n\n";
-},"2":function(container,depth0,helpers,partials,data,blockParams) {
-    var stack1;
-
-  return "      <li>"
-    + ((stack1 = container.lambda(blockParams[0][0], depth0)) != null ? stack1 : "")
-    + "</li>\n";
-},"4":function(container,depth0,helpers,partials,data) {
-    return "  <p>No items yet!</p>\n";
-},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data,blockParams) {
-    var stack1;
-
-  return "<h3>Shopping cart</h3>\n\n"
-    + ((stack1 = helpers["if"].call(depth0 != null ? depth0 : {},((stack1 = (depth0 != null ? depth0.orderItems : depth0)) != null ? stack1.length : stack1),{"name":"if","hash":{},"fn":container.program(1, data, 0, blockParams),"inverse":container.program(4, data, 0, blockParams),"data":data,"blockParams":blockParams})) != null ? stack1 : "");
-},"useData":true,"useBlockParams":true});
 
 /***/ })
 /******/ ]);

@@ -1,0 +1,16 @@
+<button data-element="backButton">Back</button> <button data-element="addToBasket">Add to basket</button>
+<div>
+  <img class="phone" src="{{phone.images.[0]}}">
+
+  <h1>{{{phone.name}}}</h1>
+
+  <p>{{{phone.description}}}</p>
+
+  <ul class="phone-thumbs">
+    {{#each phone.images as |image| }}
+      <li>
+        <img src="{{image}}">
+      </li>
+    {{/each}}
+  </ul>
+</div>
