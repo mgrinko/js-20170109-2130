@@ -5,7 +5,7 @@ function onError(error) {
 
 class MyPromise {
   constructor(behaviourFunction) {
-    behaviourFunction(this._resolve, this._reject)
+    behaviourFunction(this._resolve, this._reject);
   }
 
   _resolve(data) {
@@ -22,6 +22,14 @@ class MyPromise {
 }
 
 export default {
+  /**
+   * Returns promise of request sent to the server
+   *
+   * @param {string} url - request url
+   * @param {Object} options - request options
+   *
+   * @returns {Promise}
+   */
   request(url, options = {}) {
 
     return new Promise((resolve, reject) => {

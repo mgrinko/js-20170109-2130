@@ -8,12 +8,10 @@ export default {
       url += `?query=${query}`;
     }
 
-    return HttpService.request(url);
-      // success: (phones) => {
-      //   let filteredphones = this._filterPhones(phones, query);
-      //
-      //   onSuccess(filteredphones);
-      // },
+    return HttpService.request(url)
+      .then((phones) => {
+        return this._filterPhones(phones, query);
+      });
   },
 
   get(id) {
